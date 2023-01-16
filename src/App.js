@@ -1,6 +1,7 @@
 import "./App.css";
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import Prices from "./components/Prices/Prices";
+import { useEffect } from "react";
 
 const INITIAL_PRICES = [
   // {
@@ -33,38 +34,103 @@ const INITIAL_PRICES = [
 
 const App = () => {
   const [prices, setPrices] = useState(INITIAL_PRICES);
-  const [pricess, setPricess] = useState("");
+  const [pricess, setPricess] = useState([]);
 
-  function fetchPricesHandler() {
-    fetch("https://swapi.dev/api/starships/")
-      .then((response) => {
-        return response.json();
-        // this returns promise
-      })
-      .then((data) => {
-        const transformedToPrices = data.results.map((starShipData) => {
-          return {
-            id: starShipData.model,
-            title: starShipData.name,
-            amount: starShipData.cost_in_credits,
-            // date: starShipData.created,
-          };
-        });
+  // function fetchPricesHandler() {
+  //   fetch("https://swapi.dev/api/starships/")
+  //  // fetch returns a promise
+  //     .then((response) => {
+  //       return response.json();
+  //       // this returns promise
+  //     })
+  //     .then((data) => {
+  //       // trzy razy zrobic to co ponizej dla eurusd gbpusd i eurjpy przefiltrowac a pozniej zmapowac
+  //       const transformedToPrices = data.results.map((starShipData) => {
+  //         return {
+  //           id: starShipData.model,
+  //           title: starShipData.name,
+  //           amount: starShipData.cost_in_credits,
+  //           // date: starShipData.created,
+  //         };
+  //       });
 
-        setPricess(transformedToPrices);
+  //       setPricess(transformedToPrices);
+  //     });
+  // }
+
+  async function fetchPricesHandler() {
+    // async before a function means a function always return a promise
+    // async wraps non-promises in a promise
+
+    try {
+      const response = await fetch("https://swapi.dev/api/starships/");
+      // here instead of fetch should be used getAllPrices????
+      // await makes JavaScript wait until that promise settles and return its result
+
+      const data = await response.json();
+
+      // NEW START
+      const filteredToSlow = data.results.filter(
+        (starShipData1) => starShipData1.length < 600
+      );
+      console.log("fileteredToSlow");
+      console.log(filteredToSlow);
+
+      const transformedToPrices = filteredToSlow.map((starShipData) => {
+        return {
+          id: starShipData.model,
+          title: starShipData.name,
+          amount: starShipData.cost_in_credits,
+          length: starShipData.length,
+          // date: starShipData.created,
+        };
       });
+      // NEW END
+
+      // const transformedToPrices = data.results.map((starShipData) => {
+      //   return {
+      //     id: starShipData.model,
+      //     title: starShipData.name,
+      //     amount: starShipData.cost_in_credits,
+      //     // date: starShipData.created,
+      //   };
+      // });
+      setPricess(transformedToPrices);
+      console.log("transformedToPrices");
+      console.log(transformedToPrices);
+    } catch (err) {
+      alert(err);
+    }
   }
+
+
+
+  useEffect(()=> {
+    const interval = setInterval(()=> {
+      // fetchPricesHandler();
+
+// Here should be fetchLatestPrice function invoked
+
+      console.log("Bang")
+    
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Price Ticker</h1>
         <h4>Tomasz Skrzypek</h4>
-        <Prices items={prices} />
+        <Prices items={INITIAL_PRICES} />
         <p>-----------</p>
         <h4>From Star Wars API Mock Data</h4>
         <button onClick={fetchPricesHandler}>Fetch Fetch Fetch</button>
-        <Prices items={pricess} />
+        <div className="App-tables">
+          <Prices items={pricess} />
+          <Prices items={pricess} />
+          <Prices items={pricess} />
+        </div>
       </header>
     </div>
   );

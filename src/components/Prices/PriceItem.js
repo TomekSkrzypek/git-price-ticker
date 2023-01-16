@@ -8,6 +8,7 @@ const PriceItem = (props) => {
         {/* <li>id: {props.number}</li> */}
         <li>name: {props.title}</li>
         <li>{props.amount}</li>
+        <li>len: {props.length}</li>
         {/* <li>{props.date}</li> */}
       </ul>
     </div>

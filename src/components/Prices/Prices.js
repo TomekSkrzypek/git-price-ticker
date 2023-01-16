@@ -1,3 +1,4 @@
+import "./Prices.css";
 import React from "react";
 import PriceItem from "./PriceItem";
 
@@ -8,13 +9,14 @@ const Prices = (props) => {
   return (
     <div>
       <h1>Prices</h1>
-      <div>
+      <div className="Prices-table">
         {props.items.map((item) => (
           <PriceItem
             key={item.id}
             // number={item.id}
             title={item.title}
             amount={item.amount}
+            length={item.length}
             // date={item.date}
           />
         ))}
