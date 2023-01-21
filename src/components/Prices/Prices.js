@@ -8,7 +8,7 @@ const Prices = (props) => {
 
   return (
     <div>
-      <h1>Prices</h1>
+      <h1>{props.name}</h1>
       <div className="Prices-table">
         {props.items.map((item) => (
           <PriceItem

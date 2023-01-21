@@ -32,9 +32,36 @@ const INITIAL_PRICES = [
   },
 ];
 
+const INITIAL_PRICES2 = [
+  {
+    id: 151,
+    title: "USD/GBP",
+    amount: 1000,
+    length: "1410",
+  },
+  {
+    id: 152,
+    title: "USD/GBP",
+    amount: 2100,
+    length: "1410",
+  },
+  {
+    id: 153,
+    title: "USD/GBP",
+    amount: 32100,
+    length: "1410",
+  },
+];
+
 const App = () => {
   const [prices, setPrices] = useState(INITIAL_PRICES);
   const [pricess, setPricess] = useState([]);
+  const [pricesss, setPricesss] = useState(INITIAL_PRICES2);
+  const [value, setValue] = useState([]);
+
+  const [eurUsdValueLatest, seteurUsdValueLatest] = useState("0");
+  const [gbpUsdValueLatest, setgbpUsdValueLatest] = useState("0");
+  const [eurJpyValueLatest, seteurJpyValueLatest] = useState("0");
 
   // function fetchPricesHandler() {
   //   fetch("https://swapi.dev/api/starships/")
@@ -99,29 +126,124 @@ const App = () => {
       console.log("transformedToPrices");
       console.log(transformedToPrices);
     } catch (err) {
-      alert(err);
+      // alert(err);
     }
   }
 
+  async function fetchLatestPricesHandler(element) {
+    // async before a function means a function always return a promise
+    // async wraps non-promises in a promise
+    console.log("Element: " + element);
+    const index = element;
+    console.log("index: " + index);
+    try {
+      const response = await fetch("https://swapi.dev/api/starships/");
+      // here instead of fetch should be used getAllPrices????
+      // await makes JavaScript wait until that promise settles and return its result
 
+      const data = await response.json();
+      const latestPriceExtracted = data.results[index].cost_in_credits;
+      console.log("latestPriceExtracted");
+      console.log(latestPriceExtracted);
 
-  useEffect(()=> {
-    const interval = setInterval(()=> {
+      // const transformedToPrices = filteredToSlow.map((starShipData) => {
+      //   return {
+      //     id: starShipData.model,
+      //     title: starShipData.name,
+      //     amount: starShipData.cost_in_credits,
+      //     length: starShipData.length,
+      //     // date: starShipData.created,
+      //   };
+      // });
+      const transformedToPrices = {
+        // id: index * Math.random,
+        id: index,
+        title: "USD/GBP",
+        amount: latestPriceExtracted,
+        length: "1410",
+      };
+
+      console.log("transformedToPrices triple");
+      console.log(transformedToPrices);
+      console.log("value before: " + value);
+      setPricesss((prevState) => {
+        return [transformedToPrices, ...prevState];
+      });
+      console.log("value after: " + value);
+      // return transformedToPrices;
+      // setPricesss((prevState) => {
+      //   return { ...prevState, transformedToPrices};
+      // });
+
+      // setPricesss((prevState) => {
+      //   return {
+      //     [
+      //       id: index,
+      //   title: "USD/GBP",
+      //   amount: latestPriceExtracted,
+      //   length: "1410"
+      //     ],
+      //     ...prevState,
+      //   };
+      // });
+
+      // setPricesss([]);
+      // setPricesss((prevState) => {
+      //   return {
+      //     transformedToPrices,
+      //     ...prevState,
+      //   };
+      // });
+      // setPricesss([])
+    } catch (err) {
+      // alert(err);
+    }
+  }
+
+  // SPROBOWAC WRZUCIC fetchlatestPriceHandler DO useEffect-a
+
+  useEffect(() => {
+    let counter = 0;
+    const interval = setInterval(() => {
       // fetchPricesHandler();
+      console.log("in useEffect counter: " + counter);
+      console.log("Value useEffect: " + value);
+      // Here should be fetchLatestPrice function invoked
 
-// Here should be fetchLatestPrice function invoked
+      fetchLatestPricesHandler(counter);
+      // const dataFetched = fetchLatestPricesHandler(counter);
 
-      console.log("Bang")
-    
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [])
+      // const neewestValue = dataFetched
+      //   .then((response) => {
+      //     return response.json();
+      //     // this returns promise
+      //   })
+      //   .then((data) => {
+      //     return data.results;
+      //   });
+      // console.log("neewestValue: " + neewestValue);
+      // setValue(neewestValue);
+      // // console.log("Value after: " + value);
+      counter++;
+      console.log("------------------");
+    }, 1000);
+    return () => {
+      console.log("interval Cleared");
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Price Ticker</h1>
         <h4>Tomasz Skrzypek</h4>
+        <div className="App-tables">
+          <Prices name={"EUR / USD"} items={pricesss} />
+          <Prices name={"GBP / USD"} items={pricesss} />
+          <Prices name={"EUR / JPY"} items={pricesss} />
+        </div>
+        <h4>end of timer prices</h4>
         <Prices items={INITIAL_PRICES} />
         <p>-----------</p>
         <h4>From Star Wars API Mock Data</h4>
