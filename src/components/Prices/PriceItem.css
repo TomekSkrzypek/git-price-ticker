@@ -1,8 +1,12 @@
-.price-item{
-    display: flex;
-    list-style: none;
-    justify-content: space-between;
-    align-items: center;
-    background-color: black;
-    /* border: 1px solid white; */
-}
+.price-item {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  gap: 25px;
+  font-size: 0.95rem;
+ }
+
+
+

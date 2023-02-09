@@ -1,15 +1,13 @@
 import React from "react";
-import './PriceItem.css';
+import "./PriceItem.css";
 
 const PriceItem = (props) => {
   return (
     <div>
       <ul className="price-item">
-        {/* <li>id: {props.number}</li> */}
-        <li>name: {props.title}</li>
-        <li>{props.amount}</li>
-        <li>len: {props.length}</li>
-        {/* <li>{props.date}</li> */}
+        <li>bid: {props.bid}</li>
+        <li>ask: {props.ask}</li>
+        <li>date: {props.timestamp}</li>
       </ul>
     </div>
   );

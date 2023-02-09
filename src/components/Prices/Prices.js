@@ -7,21 +7,21 @@ const Prices = (props) => {
   console.log(props.items);
 
   return (
-    <div>
+    <span>
       <h1>{props.name}</h1>
       <div className="Prices-table">
         {props.items.map((item) => (
           <PriceItem
             key={item.id}
-            // number={item.id}
+            id={item.id}
             title={item.title}
-            amount={item.amount}
-            length={item.length}
-            // date={item.date}
+            bid={item.bid}
+            ask={item.ask}
+            timestamp={item.timestamp}
           />
         ))}
       </div>
-    </div>
+    </span>
   );
 };
 
